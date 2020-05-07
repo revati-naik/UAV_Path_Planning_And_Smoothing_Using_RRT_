@@ -8,6 +8,7 @@ import node
 import obstacles
 import utils 
 import univ
+import path_pruning
 
 
 import sys
@@ -82,11 +83,11 @@ def rrt(start_coords, goal_coords, radius, clearance):
 			if (obstacle_status == False):
 				add_node = node.Node(current_coords=x_random, parent_coords=min_node[1], distance=min_node[0])
 				path.append(add_node)
-				print("<<<<<<<<<<<<<_before<<<<<<<<<,")
-				print("len(tree)", len(tree))
+				# print("<<<<<<<<<<<<<_before<<<<<<<<<,")
+				# print("len(tree)", len(tree))
 				heapq.heappush(tree,[add_node.distance, add_node.current_coords, add_node.parent_coords])
-				print("<<<<<<<<<<<<after<<<<<<<<<<,")
-				print("len(tree)", len(tree))
+				# print("<<<<<<<<<<<<after<<<<<<<<<<,")
+				# print("len(tree)", len(tree))
 				# tree.append([add_node.distance, add_node.current_coords, add_node.parent_coords])
 
 		else:
@@ -102,12 +103,12 @@ def rrt(start_coords, goal_coords, radius, clearance):
 			obstacle_status = obstacles.withinObstacleSpace(point=min_node[1], radius=radius, clearance=clearance)
 			if (obstacle_status == False):
 				add_node = node.Node(current_coords=x_near, parent_coords=min_node[1], distance=STEP_SIZE)
-				print("<<<<<<<<<<<<<_before<<<<<<<<<,")
-				print("len(tree)", len(tree))
+				# print("<<<<<<<<<<<<<_before<<<<<<<<<,")
+				# print("len(tree)", len(tree))
 				path.append(add_node)
 				heapq.heappush(tree,[add_node.distance, add_node.current_coords, add_node.parent_coords])
-				print("<<<<<<<<<<<<<_before<<<<<<<<<,")
-				print("len(tree)", len(tree))
+				# print("<<<<<<<<<<<<<_before<<<<<<<<<,")
+				# print("len(tree)", len(tree))
 				
 				# tree.append([add_node.distance, add_node.current_coords, add_node.parent_coords])
 
@@ -122,7 +123,7 @@ def rrt(start_coords, goal_coords, radius, clearance):
 
 		
 		N += 1
-		print("-------------------")
+		# print("-------------------")
 		# print(path)
 	return path, goal_node
 
@@ -138,7 +139,13 @@ def testMain():
 	clearance = 0.1
 
 	path, goal_node = rrt(start_coords=start_coords, goal_coords=goal_coords, radius=radius, clearance=clearance)
+	# print(path)
+	# np.save("../Paths/path.npy", path)
+	# np.save("./path.npy", path)
+	# sys.exit(0)
+
 	univ.function(exploration_node_vector=path, goal_node=goal_node, path_node_vector=None, step_size=None)
+	path_pruning.prunedPath(path=path, goal_node=goal_node)
 
 if __name__ == '__main__':
 	testMain()
